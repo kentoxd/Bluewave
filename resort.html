@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="res/logo/logologo.png">
+    <title>Blue Wave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles/blue.css">
+    <link rel="stylesheet" href="styles/auth.css">
+  </head>
+  <body>
+    <header class="page-header header container-fluid">
+      <nav class="navbar navbar-expand-md fixed-top">
+        <img src="res/logo/logo.png" alt="">
+        <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navigation">
+            <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link activ" href="#home">Accommodations</a></li>
+            <li class="nav-item"><a class="nav-link activ" href="map.html">Resort Map</a></li>
+            <li class="nav-item"><a class="nav-link" href="faqs.html">FAQs</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+            <li class="nav-item">
+              <button id="loginBtn" class="btn btn-outline-light me-2">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Login
+              </button>
+            </li>
+            <li class="nav-item">
+              <button id="accountBtn" class="btn btn-outline-light me-2">
+                <i class="bi bi-person me-1"></i>My Account
+              </button>
+            </li>
+            <li class="nav-item">
+              <button id="adminBtn" class="btn btn-outline-light me-2">
+                <i class="bi bi-gear me-1"></i>Admin Dashboard
+              </button>
+            </li>
+            <li class="nav-item">
+              <button id="logoutBtn" class="btn btn-outline-danger">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="phia">
+        <h1>Accommodations</h1>
+      </div>
+    </header>
+    <div class="container rooms">
+      <div class="row">
+        <div class="col-md-6 desc">
+          <h4>Large Villas (Ideal for families or groups - up to 8-12 pax)</h4>
+          <p>12,000 / night</p>
+          <p>Inclusions: Air conditioned rooms, kitchen, living area, private veranda/pool access</p>
+          <button class="btn btn-primary book-now-btn" data-room="Large Villa">
+            <i class="bi bi-calendar-check me-1"></i>Book Now
+            <small class="d-block">5 rooms available</small>
+          </button>
+          <br>
+          <br>
+          <p><i class="bi bi-calendar"></i> Availability</p>
+        </div>
+        <div class="col-md-6 roomimg">
+          <img src="res/Large Villa.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="container rooms">
+      <div class="row">
+        <div class="col-md-6 desc">
+          <h4>Medium Villas (For small families or couples - up to 4-6 pax)</h4>
+          <p>7,000 / night</p>
+          <p>Inclusions: 2 bedrooms or 1 family room, airconditioned, small kitchen/living space.</p>
+          <button class="btn btn-primary book-now-btn" data-room="Medium Villa">
+            <i class="bi bi-calendar-check me-1"></i>Book Now
+            <small class="d-block">5 rooms available</small>
+          </button>
+          <br>
+          <br>
+          <p><i class="bi bi-calendar"></i> Availability</p>
+        </div>
+        <div class="col-md-6 roomimg">
+          <img src="res/Medium Villa.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="container rooms">
+      <div class="row">
+        <div class="col-md-6 desc">
+          <h4>Cottages (For day-tour guests - 6-10 pax per cottage)</h4>
+          <p>2,500 / night</p>
+          <p>Inclusions: Open-air hut/cottage, table + seating, access to resort facilities (pool, beach, etc.).</p>
+          <button class="btn btn-primary book-now-btn" data-room="Cottage">
+            <i class="bi bi-calendar-check me-1"></i>Book Now
+            <small class="d-block">5 rooms available</small>
+          </button>
+          <br>
+          <br>
+          <p><i class="bi bi-calendar"></i> Availability</p>
+        </div>
+        <div class="col-md-6 roomimg">
+          <img src="res/Cottages.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="container rooms">
+      <div class="row">
+        <div class="col-md-6 desc">
+          <h4>Camping Area (Bonfire space for open-area events)</h4>
+          <p>800 / person per night (bring-your-own tent) Or ₱1,500 - 2,000 for groups (per tent if resort provides).</p>
+          <p>Inclusions: Common bathroom access, bonfire, open area for activities.</p>
+          <button class="btn btn-primary book-now-btn" data-room="Camping Area">
+            <i class="bi bi-calendar-check me-1"></i>Book Now
+            <small class="d-block">5 rooms available</small>
+          </button>
+          <br>
+          <br>
+          <p><i class="bi bi-calendar"></i> Availability</p>
+        </div>
+        <div class="col-md-6 roomimg">
+          <img src="res/Camping.png" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid reservation" id="myReservations">
+      <h1>My Reservations</h1>
+      <br>
+      <img src="res/cal.png" alt="">
+      <br>
+      <br>
+      <h1>No Reservations yet</h1>
+      <h1>Book your first day with us</h1>
+      <br>
+      <button class="btn btn-primary btn-lg" onclick="document.querySelector('.rooms').scrollIntoView({behavior: 'smooth'})">Book Now</button>
+    </div>
+    <footer class="page-footer">
+      <div class="container-fluid text-center">
+        <div class="row">
+          <div class="col-3 logs">
+            <img src="res/logo/logologo.png" alt="">
+          </div>
+          <div class="col-3 address">
+            <p>123, Project 4, Quezon City</p>
+            <p>+63 912 345 6789</p>
+            <p>bluewave2025@gmail.com</p>
+          </div>
+          <div class="col-3 links">
+            <a href="https://www.facebook.com/ImGeorgeAspecto1905" target="_blank" rel="noopener noreferrer" class="text-decoration-none text-white">
+              <i class="bi bi-facebook"></i><p>Facebook</p>
+            </a>
+            <i class="bi bi-twitter-x"></i><p>Twitter</p>
+          </div>
+          <div class="col-3 eh">
+            <a href="about.html" class="text-decoration-none text-white"><p>About Us</p></a>
+            <a href="contact.html" class="text-decoration-none text-white"><p>Contact Us</p></a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal" class="text-decoration-none text-white"><p>Terms & Conditions</p></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Login / Register Modal - New Design -->
+    <div id="loginModal" class="modal fade auth-modal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="auth-header">Create Account</div>
+            <div class="auth-field mb-3">
+              <label class="form-label">E mail</label>
+              <input type="email" id="emailInput" class="form-control auth-input" placeholder="name@gmail.com">
+            </div>
+            <div class="auth-field mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" id="passwordInput" class="form-control auth-input" placeholder="6+ characters">
+            </div>
+            <div class="auth-legal mb-3">
+              By signing up you agree to <a data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a> at zoho.
+            </div>
+            <button class="auth-primary mb-2" onclick="handleRegister()">Register</button>
+            <div class="auth-switch">
+              <a href="#" onclick="handleLogin(); return false;">Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terms & Conditions Modal -->
+    <div id="termsModal" class="modal fade" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="termsModalLabel">Terms and Conditions</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="small">
+              <p><strong>Account Responsibility</strong></p>
+              <ul>
+                <li>You are responsible for maintaining the confidentiality of your login details.</li>
+                <li>Any activity under your account will be considered as your own.</li>
+              </ul>
+              <p><strong>Accurate Information</strong></p>
+              <ul>
+                <li>You agree to provide complete and truthful information during registration and reservations.</li>
+                <li>The resort reserves the right to cancel any booking made with false or misleading details.</li>
+              </ul>
+              <p><strong>Reservation Policy</strong></p>
+              <ul>
+                <li>All bookings are subject to room availability.</li>
+                <li>Reservation details must be confirmed before finalizing.</li>
+                <li>Changes or cancellations may be subject to the resort’s policies.</li>
+              </ul>
+              <p><strong>Payment and Fees</strong></p>
+              <ul>
+                <li>Full or partial payment may be required to secure a reservation.</li>
+                <li>Additional charges may apply for extra services or damages during your stay.</li>
+              </ul>
+              <p><strong>Use of Platform</strong></p>
+              <ul>
+                <li>The platform is for personal and non-commercial use only.</li>
+                <li>Misuse, fraudulent activity, or attempts to disrupt the system may result in suspension of your account.</li>
+              </ul>
+              <p><strong>Privacy</strong></p>
+              <ul>
+                <li>Personal information provided will be handled in accordance with our Privacy Policy.</li>
+                <li>We do not share your data with third parties except as required for reservation processing.</li>
+              </ul>
+              <p><strong>Resort Rights</strong></p>
+              <ul>
+                <li>The resort reserves the right to refuse service, cancel reservations, or remove guests who violate these terms.</li>
+                <li>Policies may change without prior notice. Updates will be reflected on this page.</li>
+              </ul>
+              <p>By continuing to sign up or log in, you acknowledge that you have read, understood, and agreed to these Terms and Conditions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal fade" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bookingModalLabel">Book Your Stay</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="bookingContent">
+            <!-- Booking form will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div id="accountModal" class="modal fade" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="accountModalLabel">My Account</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="accountContent">
+            <!-- Account content will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Modal -->
+    <div id="adminModal" class="modal fade" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="adminModalLabel">Admin Dashboard</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="adminContent">
+            <!-- Admin dashboard will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth.js"></script>
+    <script src="scripts/onready.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="scripts/onscroll.js"></script>
+  </body>
+
+</html>

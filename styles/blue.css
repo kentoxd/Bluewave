@@ -1,0 +1,132 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.navbar {
+  height: 120px;
+  transition: height 0.3s ease, padding 0.3s ease, font-size .3s;
+  background-color: rgba(0, 0, 0, 0.426);
+  padding: 0;
+}
+.navbar img {
+  height: 120px;
+  background-color: antiquewhite;
+  margin-left: 5%;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  margin-top: 0;
+  padding: 25px;
+  transition: height 0.3s ease, padding 0.3s ease, transform 0.3s ease;
+}
+.navbar .nav-link {
+  text-decoration: none;
+  color: antiquewhite;
+  font-weight: bold;
+  transition: .3s;
+}
+
+.navbar .nav-link:hover{
+  background-color: #2E4E6B;
+  border-radius: .5em;
+  min-width: fit-content;
+  text-align: center;
+  color: white !important;
+  text-decoration: none;
+}
+.navbar .navbar-collapse {
+  justify-content: flex-end;
+}
+.navbar li {
+  padding: 20px;
+}
+
+.active {
+  background-color: #2E4E6B;
+  border-radius: .5em;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: center;
+  color: white !important;
+  text-decoration: none;
+}
+
+.navbar.nav-small {
+  font-size: .9em;
+  height: 100px;
+  padding: 4px 0;
+  background-color: #14274a;
+}
+.navbar.nav-small img {
+  transform: scale(1.25);
+  margin-top: 3.5em;
+  border: 1px solid black;
+}
+body {
+  padding: 0;
+  margin: 0;
+  background-color: beige;
+}
+.header {
+  position: relative;
+  min-width: 100%;
+  min-height: 90vh;
+  background-image: url('/res/banner.jpg');
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  .phia {
+    background-color: rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+  }
+    h1 {
+      font-size: 70px;
+      font-weight: 500;
+      color: white;
+      font-family: "Montserrat", sans-serif;
+  }
+}
+.rooms {
+  background-color: aliceblue;
+  padding: 20px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  img {
+    width: 500px;
+    height: 300px;
+  }
+
+}
+
+.reservation {
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  padding: 100px;
+  h1 {
+    font-weight: bold;
+  }
+}
+.page-footer {
+  background-color: #3a51ff;
+  color: #ccc;
+  padding: 60px 0 30px;
+  img {
+    width: 150px;
+    height: 100px;
+  }
+}
+button {
+  padding: 5px 50px 5px 50px;
+  background-color: #79baff;
+  border-radius: 5px;
+  color: white;
+}
+
