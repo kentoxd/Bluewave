@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -16,7 +16,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-export { db, auth, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+export { db, auth, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 export const sampleRooms = [
     {
         name: "Large Villa",
@@ -64,22 +64,6 @@ export const sampleRooms = [
     }
 ];
 
-export async function initializeSampleData() {
-    try {
-        const roomsSnapshot = await getDocs(collection(db, "rooms"));
-        if (roomsSnapshot.empty) {
-            console.log("Initializing sample room data...");
-            for (const room of sampleRooms) {
-                await addDoc(collection(db, "rooms"), room);
-            }
-            console.log("Sample data initialized successfully!");
-        } else {
-            console.log("Rooms already exist in Firebase:", roomsSnapshot.docs.length);
-        }
-    } catch (error) {
-        console.error("Error initializing sample data:", error);
-    }
-}
 
 export async function forceAddRoomsToFirebase() {
     try {
@@ -122,29 +106,6 @@ export async function forceAddRoomsToFirebase() {
     }
 }
 
-export async function resetRoomsInFirebase() {
-    try {
-        console.log("🗑️ Clearing all rooms from Firebase...");
-        
-        const roomsSnapshot = await getDocs(collection(db, "rooms"));
-        const deletePromises = roomsSnapshot.docs.map(doc => deleteDoc(doc.ref));
-        await Promise.all(deletePromises);
-        
-        console.log("✅ All rooms cleared from Firebase");
-        
-        console.log("📝 Adding all sample rooms...");
-        for (const room of sampleRooms) {
-            const docRef = await addDoc(collection(db, "rooms"), room);
-            console.log("✅ Added room:", room.name, "with ID:", docRef.id);
-        }
-        
-        console.log("🎉 Rooms reset and re-added successfully!");
-        
-    } catch (error) {
-        console.error("❌ Error resetting rooms in Firebase:", error);
-        throw error;
-    }
-}
 
 export async function updateRoomStock(roomId, decreaseBy = 1) {
     try {
@@ -233,29 +194,3 @@ export async function checkRoomAvailability(roomId) {
     }
 }
 
-export async function resetAllRoomsToFullStock() {
-    try {
-        console.log('🔄 Resetting all rooms to full stock...');
-        
-        const roomsSnapshot = await getDocs(collection(db, "rooms"));
-        const updatePromises = roomsSnapshot.docs.map(async (doc) => {
-            const roomData = doc.data();
-            await updateDoc(doc.ref, {
-                stock: 5,
-                totalStock: 5,
-                status: "available",
-                lastUpdated: new Date().toISOString()
-            });
-            console.log(`✅ Reset ${roomData.name} to full stock (5/5)`);
-        });
-        
-        await Promise.all(updatePromises);
-        console.log('🎉 All rooms reset to full stock successfully!');
-        
-        return { success: true, message: "All rooms reset to full stock" };
-        
-    } catch (error) {
-        console.error('❌ Error resetting rooms to full stock:', error);
-        return { success: false, error: error.message };
-    }
-}

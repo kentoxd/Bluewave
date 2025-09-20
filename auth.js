@@ -1,9 +1,8 @@
 import { 
     db, auth, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, 
-    query, where, orderBy, onSnapshot, createUserWithEmailAndPassword, 
+    query, where, createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, signOut, onAuthStateChanged,
-    initializeSampleData, forceAddRoomsToFirebase, resetRoomsInFirebase,
-    updateRoomStock, restoreRoomStock, checkRoomAvailability, resetAllRoomsToFullStock
+    forceAddRoomsToFirebase, updateRoomStock, restoreRoomStock, checkRoomAvailability
 } from './firebase-config.js';
 
 let currentUser = null;
@@ -43,7 +42,6 @@ function setupAuthStateListener() {
     onAuthStateChanged(auth, (user) => {
         console.log('👤 Auth state changed:', user ? user.email : 'No user');
         currentUser = user;
-        window.currentUser = currentUser;
         updateAuthUI();
         
         if (user) {
@@ -267,9 +265,11 @@ async function loadRooms() {
         
         console.log('📋 Final rooms loaded:', rooms.length);
         console.log('🏨 Room names:', rooms.map(r => r.name));
-        window.rooms = rooms;
         
-        updateStockDisplay();
+        // Ensure rooms array is properly set before updating display
+        if (rooms && rooms.length > 0) {
+            updateStockDisplay();
+        }
         
     } catch (error) {
         console.error('❌ Error loading rooms:', error);
@@ -277,7 +277,9 @@ async function loadRooms() {
             const { sampleRooms } = await import('./firebase-config.js');
             rooms = sampleRooms.map((room, index) => ({ id: `sample-room-${index}`, ...room }));
             console.log('📋 Fallback rooms loaded:', rooms.length);
-            window.rooms = rooms;
+            if (rooms && rooms.length > 0) {
+                updateStockDisplay();
+            }
         } catch (fallbackError) {
             console.error('❌ Fallback failed:', fallbackError);
         }
@@ -862,17 +864,45 @@ async function handleBookNowClick(event) {
         return;
     }
     
+    // Ensure rooms are loaded before proceeding
     if (rooms.length === 0) {
         console.log('🔄 Rooms not loaded, loading now...');
-        await loadRooms();
+        try {
+            await loadRooms();
+            // Wait a bit for the rooms to be fully processed
+            await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (error) {
+            console.error('❌ Error loading rooms:', error);
+            showAlert('Failed to load room information. Please try again.', 'error');
+            return;
+        }
     }
     
-    const roomName = event.target.getAttribute('data-room');
+    // Find the button element (in case user clicked on icon or text inside)
+    let buttonElement = event.target;
+    while (buttonElement && !buttonElement.classList.contains('book-now-btn')) {
+        buttonElement = buttonElement.parentElement;
+    }
+    
+    if (!buttonElement) {
+        console.error('❌ Could not find book-now-btn element');
+        showAlert('Invalid button element. Please try again.', 'error');
+        return;
+    }
+    
+    const roomName = buttonElement.getAttribute('data-room');
     console.log('🔍 Looking for room:', roomName);
     console.log('📋 Available rooms:', rooms.map(r => r.name));
     
+    if (!roomName) {
+        console.error('❌ No room name found in data-room attribute');
+        console.log('🔍 Button element:', buttonElement);
+        console.log('🔍 Button attributes:', buttonElement.attributes);
+        showAlert('Invalid room selection. Please try again.', 'error');
+        return;
+    }
+    
     selectedRoom = rooms.find(r => r.name === roomName);
-    window.selectedRoom = selectedRoom;
     console.log('✅ Selected room:', selectedRoom);
     console.log('🔍 Room details:', selectedRoom ? {
         id: selectedRoom.id,
@@ -957,22 +987,3 @@ window.handleRegister = handleRegister;
 window.updateReservationStatus = updateReservationStatus;
 window.cancelReservation = cancelReservation;
 window.deleteReservation = deleteReservation;
-window.currentUser = currentUser;
-window.rooms = rooms;
-window.selectedRoom = selectedRoom;
-window.setupBookNowButtons = setupBookNowButtons;
-window.forceAddRoomsToFirebase = forceAddRoomsToFirebase;
-window.resetRoomsInFirebase = resetRoomsInFirebase;
-window.loadRooms = loadRooms;
-window.updateRoomStock = updateRoomStock;
-window.restoreRoomStock = restoreRoomStock;
-window.checkRoomAvailability = checkRoomAvailability;
-window.updateStockDisplay = updateStockDisplay;
-window.resetAllRoomsToFullStock = resetAllRoomsToFullStock;
-
-window.refreshStockDisplay = async function() {
-    console.log('🔄 Manually refreshing stock display...');
-    await loadRooms();
-    updateStockDisplay();
-    console.log('✅ Stock display refreshed');
-};
