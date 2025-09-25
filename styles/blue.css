@@ -27,7 +27,7 @@
 .navbar .nav-link:hover{
   background-color: #2E4E6B;
   border-radius: .5em;
-  min-width: fit-content;
+  min-width: -webkit-fill-available;
   text-align: center;
   color: white !important;
   text-decoration: none;
@@ -103,7 +103,7 @@ body {
     width: 500px;
     height: 300px;
   }
-
+  border-radius: 30px;
 }
 
 .reservation {
@@ -113,6 +113,7 @@ body {
   h1 {
     font-weight: bold;
   }
+  
 }
 .page-footer {
   background-color: #3a51ff;
@@ -129,4 +130,3 @@ button {
   border-radius: 5px;
   color: white;
 }
-
