@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Blue Wave Resort</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="styles/admin.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-gear me-2"></i>Admin Dashboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Site
+                </a>
+                <a class="nav-link text-danger" href="#" onclick="handleLogout()">
+                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
+                    <i class="bi bi-house-door me-2"></i>Dashboard
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reservations-tab" data-bs-toggle="tab" data-bs-target="#reservations" type="button" role="tab">
+                    <i class="bi bi-calendar-check me-2"></i>Reservations
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="rooms-tab" data-bs-toggle="tab" data-bs-target="#rooms" type="button" role="tab">
+                    <i class="bi bi-door-open me-2"></i>Room Management
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contacts" type="button" role="tab">
+                    <i class="bi bi-envelope me-2"></i>Contact Messages
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-4" id="adminTabContent">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Reservations</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalReservations">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Confirmed</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="confirmedReservations">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="pendingReservations">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="bi bi-clock fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-info shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Contact Messages</div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalContacts">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="bi bi-envelope fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            <!-- Reservations Tab -->
+            <div class="tab-pane fade" id="reservations" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5>Reservations</h5>
+                    <button class="btn btn-outline-primary btn-sm" onclick="refreshReservations()">
+                        <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Guest Name</th>
+                                        <th>Email</th>
+                                        <th>Room</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reservationsTable">
+                                    <!-- Reservations will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Management Tab -->
+            <div class="tab-pane fade" id="rooms" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5>Room Management</h5>
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm" onclick="showAddRoomModal()">
+                            <i class="bi bi-plus-circle me-1"></i>Add Room
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="cleanupDuplicates()">
+                            <i class="bi bi-trash me-1"></i>Clean Duplicates
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Stock</th>
+                                        <th>Status</th>
+                                        <th>Image</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="roomsTable">
+                                    <!-- Rooms will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Messages Tab -->
+            <div class="tab-pane fade" id="contacts" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5>Contact Messages</h5>
+                    <div class="btn-group">
+                        <button class="btn btn-outline-primary btn-sm" onclick="refreshContacts()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" onclick="markAllAsRead()">
+                            <i class="bi bi-check-all me-1"></i>Mark All Read
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Message</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contactsTable">
+                                    <!-- Contact messages will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div id="replyModal" class="modal fade" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="replyModalLabel">Reply to Contact</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="replyForm">
+                        <div class="mb-3">
+                            <label for="replySubject" class="form-label">Subject *</label>
+                            <input type="text" class="form-control" id="replySubject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="replyMessage" class="form-label">Message *</label>
+                            <textarea class="form-control" id="replyMessage" rows="6" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="replyViaEmail" checked>
+                                <label class="form-check-label" for="replyViaEmail">
+                                    Send via email client
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="replySaveToHistory" checked>
+                                <label class="form-check-label" for="replySaveToHistory">
+                                    Save to message history
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="sendReply()">Send Reply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Modal -->
+    <div id="roomModal" class="modal fade" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomModalLabel">Add/Edit Room</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="roomForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="roomName" class="form-label">Room Name *</label>
+                                    <input type="text" class="form-control" id="roomName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomPrice" class="form-label">Price per Night *</label>
+                                    <input type="number" class="form-control" id="roomPrice" min="0" step="100" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomStock" class="form-label">Available Rooms *</label>
+                                    <input type="number" class="form-control" id="roomStock" min="0" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomStatus" class="form-label">Status *</label>
+                                    <select class="form-select" id="roomStatus" required>
+                                        <option value="available">Available</option>
+                                        <option value="unavailable">Unavailable</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="roomDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="roomDescription" rows="4"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomImage" class="form-label">Room Image *</label>
+                                    <input type="file" class="form-control" id="roomImage" accept="image/*" required>
+                                    <input type="hidden" id="roomImageData" value="">
+                                    <div class="form-text">Upload an image for the room (will be automatically resized to standard dimensions)</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="roomCapacity" class="form-label">Capacity</label>
+                                    <input type="number" class="form-control" id="roomCapacity" min="1">
+                                </div>
+<<<<<<< HEAD
+                                <div class="mb-3">
+                                    <label for="roomAmenities" class="form-label">Amenities</label>
+                                    <input type="text" class="form-control" id="roomAmenities" placeholder="Air Conditioning, WiFi, Pool Access, etc.">
+                                    <div class="form-text">Separate amenities with commas</div>
+                                </div>
+=======
+>>>>>>> f7a3ea123318f2cc47fc86c3b3673c00062a194e
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Image Preview</label>
+                            <div id="imagePreview" class="border rounded p-2 text-center" style="min-height: 200px;">
+                                <small class="text-muted">Image preview will appear here</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveRoom()">Save Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

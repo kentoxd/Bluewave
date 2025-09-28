@@ -1,0 +1,117 @@
+.navbar {
+  height: 120px;
+  transition: height 0.3s ease, padding 0.3s ease, font-size .3s;
+  background-color: rgba(0, 0, 0, 0.426);
+  padding: 0;
+  img {
+    height: 120px;
+    background-color: antiquewhite;
+    margin-left: 5%;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    margin-top: 0;
+    padding: 25px;
+    transition: height 0.3s ease, padding 0.3s ease, transform 0.3s ease;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: antiquewhite;
+    font-weight: bold;
+    transition: .3s;
+  }
+  .nav-link:hover{
+    background-color: #2E4E6B;
+    border-radius: .5em;
+    min-width: -webkit-fill-available;
+    text-align: center;
+    color: white !important;
+    text-decoration: none;
+  }
+  .navbar-collapse {
+    justify-content: flex-end;
+  }
+  li {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .navbar .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 10px;
+  }
+  li {
+    padding: 20px;
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: beige;
+  overflow-x: hidden;
+  width: 100%;
+}
+.header {
+    margin: 0;
+    padding: 0;
+}
+.page-footer {
+  background-color: #3a51ff;
+  color: #ccc;
+  padding: 60px 0 30px;
+  img {
+    width: 150px;
+    height: 100px;
+  }
+}
+.active {
+  background-color: #2E4E6B;
+  border-radius: .5em;
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: center;
+  color: white !important;
+  text-decoration: none;
+}
+
+.navbar.nav-small {
+  font-size: .9em;
+  height: 100px;
+  padding: 4px 0;
+  background-color: #14274a;
+}
+.navbar.nav-small img {
+  transform: scale(1.25);
+  margin-top: 0;
+  border: 1px solid black;
+}
+
+h1 {
+    padding: 40px 0 40px 0;
+    font-size: clamp(2rem, 6vw, 50px);
+    font-weight: bold;
+    color: #333;
+}
+
+.map-section {
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+}
+
+.map-container {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+}
+
+.map-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
