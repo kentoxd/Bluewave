@@ -792,7 +792,7 @@ function loadAccountContent() {
                     </div>
                 </div>
                 
-                <div class="card">
+                <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="card-title mb-0">My Reservations</h5>
                     </div>
@@ -829,9 +829,133 @@ function loadAccountContent() {
                         `}
                     </div>
                 </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">My Messages & Replies</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="userMessagesContent">
+                            <div class="text-center py-3">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading messages...</span>
+                                </div>
+                                <p class="text-muted mt-2">Loading your messages...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
+    
+    // Load user messages and replies
+    loadUserMessages();
+}
+
+async function loadUserMessages() {
+    const userMessagesContent = document.getElementById('userMessagesContent');
+    if (!userMessagesContent) return;
+    
+    try {
+        console.log('🔍 Loading user messages for:', currentUser.email);
+        
+        // Load user's contact messages (simplified query first)
+        const userContactsQuery = query(
+            collection(db, 'contactSubmissions'),
+            where('email', '==', currentUser.email)
+        );
+        const userContactsSnapshot = await getDocs(userContactsQuery);
+        const userContacts = userContactsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        
+        console.log('📧 Found user contacts:', userContacts.length);
+        
+        // Load replies to user's messages
+        const userReplies = [];
+        for (const contact of userContacts) {
+            const repliesQuery = query(
+                collection(db, 'contactReplies'),
+                where('contactId', '==', contact.id)
+            );
+            const repliesSnapshot = await getDocs(repliesQuery);
+            const contactReplies = repliesSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            userReplies.push(...contactReplies);
+        }
+        
+        console.log('💬 Found user replies:', userReplies.length);
+        
+        // Display messages and replies
+        if (userContacts.length === 0) {
+            userMessagesContent.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-envelope text-muted" style="font-size: 4rem;"></i>
+                    <h5 class="text-muted">No messages yet</h5>
+                    <p class="text-muted">Contact us through our contact form to get started!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        const messagesHTML = userContacts.map(contact => {
+            const contactReplies = userReplies.filter(reply => reply.contactId === contact.id);
+            
+            return `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title mb-0">Your Message</h6>
+                            <small class="text-muted">${new Date(contact.createdAt).toLocaleDateString()}</small>
+                        </div>
+                        <p class="card-text">${contact.message}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge ${contact.status === 'replied' ? 'bg-success' : 'bg-warning'}">
+                                ${contact.status === 'replied' ? 'Replied' : 'New'}
+                            </span>
+                        </div>
+                        
+                        ${contactReplies.length > 0 ? `
+                            <hr>
+                            <h6 class="text-primary mb-2">Admin Replies</h6>
+                            ${contactReplies.map(reply => `
+                                <div class="alert alert-info">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <strong>${reply.subject}</strong>
+                                        <small class="text-muted">${new Date(reply.createdAt).toLocaleDateString()}</small>
+                                    </div>
+                                    <p class="mb-0">${reply.message}</p>
+                                    <small class="text-muted">From: ${reply.adminName}</small>
+                                </div>
+                            `).join('')}
+                        ` : contact.status === 'replied' ? `
+                            <hr>
+                            <div class="alert alert-info">
+                                <p class="mb-0">You have received a reply to this message. Please check your email for the full response.</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        userMessagesContent.innerHTML = messagesHTML;
+        
+    } catch (error) {
+        console.error('❌ Error loading user messages:', error);
+        console.error('Error details:', error.message, error.code);
+        userMessagesContent.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Error loading messages: ${error.message}
+                <br><small>Please check the console for more details.</small>
+            </div>
+        `;
+    }
 }
 
 async function loadAdminContent() {
@@ -1323,6 +1447,9 @@ function updateAccommodationsDisplay() {
     const roomsHTML = rooms.map(room => `
         <div class="container-fluid rooms">
             <div class="row">
+                <div class="col-md-6 roomimg">
+                    <img src="${room.image}" alt="${room.name}" class="img-fluid room-image" onclick="openImageModal('${room.image}', '${room.name}')">
+                </div>
                 <div class="col-md-6 desc">
                     <h4>${room.name}</h4>
                     <p>₱${room.price.toLocaleString()} / night</p>
@@ -1334,9 +1461,6 @@ function updateAccommodationsDisplay() {
                     </button>
                     <br><br>
                     <p><i class="bi bi-calendar"></i> Availability</p>
-                </div>
-                <div class="col-md-6 roomimg">
-                    <img src="${room.image}" alt="${room.name}" class="img-fluid">
                 </div>
             </div>
         </div>
@@ -1353,6 +1477,15 @@ function updateAccommodationsDisplay() {
     }
 }
 
+// Global function for image modal
+function openImageModal(imageSrc, imageTitle) {
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('modalImage').alt = imageTitle;
+    document.getElementById('imageModalLabel').textContent = imageTitle;
+    modal.show();
+}
+
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
 window.switchToLogin = switchToLogin;
@@ -1360,3 +1493,4 @@ window.switchToRegister = switchToRegister;
 window.updateReservationStatus = updateReservationStatus;
 window.cancelReservation = cancelReservation;
 window.deleteReservation = deleteReservation;
+window.openImageModal = openImageModal;

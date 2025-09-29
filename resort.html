@@ -52,79 +52,8 @@
       </div>
     </header>
     <div class="container-fluid rooms">
-      <div class="row">
-        <div class="col-md-6 desc">
-          <h4>Large Villas (Ideal for families or groups - up to 8-12 pax)</h4>
-          <p>12,000 / night</p>
-          <p>Inclusions: Air conditioned rooms, kitchen, living area, private veranda/pool access</p>
-          <button class="btn btn-primary book-now-btn" data-room="Large Villa">
-            <i class="bi bi-calendar-check me-1"></i>Book Now
-
-          </button>
-          <br>
-          <br>
-          <p><i class="bi bi-calendar"></i> Availability</p>
-        </div>
-        <div class="col-md-6 roomimg">
-          <img src="res/Large Villa.png" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid rooms">
-      <div class="row">
-        <div class="col-md-6 desc">
-          <h4>Medium Villas (For small families or couples - up to 4-6 pax)</h4>
-          <p>7,000 / night</p>
-          <p>Inclusions: 2 bedrooms or 1 family room, airconditioned, small kitchen/living space.</p>
-          <button class="btn btn-primary book-now-btn" data-room="Medium Villa">
-            <i class="bi bi-calendar-check me-1"></i>Book Now
-
-          </button>
-          <br>
-          <br>
-          <p><i class="bi bi-calendar"></i> Availability</p>
-        </div>
-        <div class="col-md-6 roomimg">
-          <img src="res/Medium Villa.png" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid rooms">
-      <div class="row">
-        <div class="col-md-6 desc">
-          <h4>Cottages (For day-tour guests - 6-10 pax per cottage)</h4>
-          <p>2,500 / night</p>
-          <p>Inclusions: Open-air hut/cottage, table + seating, access to resort facilities (pool, beach, etc.).</p>
-          <button class="btn btn-primary book-now-btn" data-room="Cottage">
-            <i class="bi bi-calendar-check me-1"></i>Book Now
-
-          </button>
-          <br>
-          <br>
-          <p><i class="bi bi-calendar"></i> Availability</p>
-        </div>
-        <div class="col-md-6 roomimg">
-          <img src="res/Cottages.png" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid rooms">
-      <div class="row">
-        <div class="col-md-6 desc">
-          <h4>Camping Area (Bonfire space for open-area events)</h4>
-          <p>800 / person per night (bring-your-own tent) Or ₱1,500 - 2,000 for groups (per tent if resort provides).</p>
-          <p>Inclusions: Common bathroom access, bonfire, open area for activities.</p>
-          <button class="btn btn-primary book-now-btn" data-room="Camping Area">
-            <i class="bi bi-calendar-check me-1"></i>Book Now
-
-          </button>
-          <br>
-          <br>
-          <p><i class="bi bi-calendar"></i> Availability</p>
-        </div>
-        <div class="col-md-6 roomimg">
-          <img src="res/Camping.png" alt="">
-        </div>
+      <div class="rooms-container">
+        <!-- rooms would show here -->
       </div>
     </div>
     <div class="container-fluid reservation" id="myReservations">
@@ -292,6 +221,21 @@
       </div>
     </div>
 
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal fade" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content image-modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageModalLabel">Room Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img id="modalImage" src="" alt="" class="img-fluid modal-image">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Scripts -->
     <script
   src="https://code.jquery.com/jquery-3.7.1.js"
@@ -304,6 +248,7 @@
     <script type="module" src="auth.js"></script>
     <script src="scripts/onready.js"></script>
     <script src="scripts/onscroll.js"></script>
+    
   </body>
 
 </html>

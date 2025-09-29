@@ -107,15 +107,121 @@ body {
 }
 .rooms {
   background-color: aliceblue;
-  padding: 2vw;
-  margin-bottom: 3vh;
-  margin-top: 3vh;
+  padding: 3rem 2rem;
+  margin: 2rem 1rem;
+  width: calc(100% - 2rem);
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rooms:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.rooms .row {
+  margin: 0;
+  padding: 0;
+}
+
+.rooms .col-md-6 {
+  padding: 1rem;
+}
+
+.rooms .desc {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rooms .roomimg {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rooms img {
   width: 100%;
-  img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    aspect-ratio: 5/3;
+  max-width: 500px;
+  height: auto;
+  aspect-ratio: 5/3;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.rooms img:hover {
+  transform: scale(1.02);
+}
+
+/* Clickable room images */
+.room-image {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.room-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Modal Styles */
+.image-modal-content {
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-image {
+  max-height: 70vh;
+  width: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.image-modal-content .modal-header {
+  background-color: #2E4E6B;
+  color: white;
+  border-radius: 15px 15px 0 0;
+  border-bottom: none;
+}
+
+.image-modal-content .modal-body {
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .rooms {
+    padding: 2rem 1rem;
+    margin: 1rem 0.5rem;
+    width: calc(100% - 1rem);
+    border-radius: 15px;
+  }
+  
+  .rooms .desc {
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .rooms .roomimg {
+    padding: 0.5rem;
+  }
+  
+  .rooms img {
+    border-radius: 10px;
+  }
+  
+  .modal-image {
+    max-height: 60vh;
+  }
+  
+  .image-modal-content .modal-body {
+    padding: 1rem;
   }
 }
 

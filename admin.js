@@ -733,9 +733,11 @@ function editRoom(roomId) {
     document.getElementById('roomStatus').value = room.status;
     document.getElementById('roomDescription').value = room.description || '';
     document.getElementById('roomCapacity').value = room.capacity || '';
+    document.getElementById('roomTotalStock').value = room.totalStock || room.stock || 1;
+    document.getElementById('roomAmenities').value = room.amenities ? room.amenities.join(', ') : '';
     
-    // Handle image - if it's a base64 data URL, use it; if it's a URL, clear the file input
-    if (room.image && room.image.startsWith('data:')) {
+    // Handle image - set the current image data for preview
+    if (room.image) {
         document.getElementById('roomImageData').value = room.image;
         document.getElementById('roomImage').value = ''; // Clear file input
     } else {
@@ -755,12 +757,13 @@ async function saveRoom() {
     const name = document.getElementById('roomName').value.trim();
     const price = parseInt(document.getElementById('roomPrice').value);
     const stock = parseInt(document.getElementById('roomStock').value);
+    const totalStock = parseInt(document.getElementById('roomTotalStock').value) || stock;
     const status = document.getElementById('roomStatus').value;
     const description = document.getElementById('roomDescription').value.trim();
     const imageData = document.getElementById('roomImageData').value;
     const capacity = parseInt(document.getElementById('roomCapacity').value) || 1;
     
-    console.log('📝 Room data:', { name, price, stock, status, description, imageData: imageData ? 'Base64 data present' : 'No image', capacity });
+    console.log('📝 Room data:', { name, price, stock, totalStock, status, description, imageData: imageData ? 'Base64 data present' : 'No image', capacity });
     
     if (!name || !price || !stock || !imageData) {
         console.log('❌ Missing required fields');
@@ -773,7 +776,7 @@ async function saveRoom() {
             name: name,
             price: price,
             stock: stock,
-            totalStock: stock,
+            totalStock: totalStock,
             status: status,
             description: description,
             image: imageData,
