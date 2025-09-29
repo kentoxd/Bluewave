@@ -9,90 +9,42 @@ let currentUser = null;
 let rooms = [];
 let reservations = [];
 let selectedRoom = null;
-let dataCache = {
-    rooms: null,
-    reservations: null,
-    lastUpdated: null,
-    cacheTimeout: 30000 // 30 seconds
-};
+let dataCache = { rooms: null, reservations: null, lastUpdated: null, cacheTimeout: 30000 };
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing BlueWave Authentication System...');
-    
-    // Show UI immediately - don't wait for data loading
     showInitialUI();
-    
     try {
-        // Set up auth listener immediately (non-blocking)
         setupAuthStateListener();
-        console.log('✅ Auth state listener set up');
-        
-        // Set up event listeners immediately (non-blocking)
         setupEventListeners();
-        console.log('✅ Event listeners set up');
-        
-        // Load data in parallel (non-blocking)
-        Promise.all([
-            loadRooms(),
-            forceAddRoomsToFirebase()
-        ]).then(() => {
-            console.log('✅ All data loaded in parallel');
+        Promise.all([loadRooms(), forceAddRoomsToFirebase()]).then(() => {
             updateStockDisplay();
             updateAccommodationsDisplay();
-        }).catch(error => {
-            console.error('❌ Error loading data:', error);
-            // Show fallback UI even if data loading fails
-            showFallbackUI();
-        });
-        
-        console.log('🎉 Authentication system initialized successfully!');
-        
+        }).catch(() => showFallbackUI());
     } catch (error) {
-        console.error('❌ Error initializing authentication system:', error);
         showFallbackUI();
     }
 });
 
 function showInitialUI() {
-    console.log('🎨 Showing initial UI immediately...');
-    
-    // Show login button immediately
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.style.display = 'block';
         loginBtn.innerHTML = '<i class="bi bi-person-circle"></i> Login';
     }
     
-    // Show account button as hidden initially
     const accountBtn = document.getElementById('accountBtn');
-    if (accountBtn) {
-        accountBtn.style.display = 'none';
-    }
+    if (accountBtn) accountBtn.style.display = 'none';
     
-    // Show loading indicators for dynamic content
     showLoadingStates();
 }
 
 function showLoadingStates() {
-    // Add loading indicators to dynamic content areas
     const stockElements = document.querySelectorAll('.stock-text');
     stockElements.forEach(element => {
         element.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
     });
-    
-    // Show skeleton for accommodations
-    const accommodationCards = document.querySelectorAll('.accommodation-card');
-    accommodationCards.forEach(card => {
-        const priceElement = card.querySelector('.price');
-        if (priceElement) {
-            priceElement.innerHTML = '<span class="placeholder col-4"></span>';
-        }
-    });
 }
 
 function showFallbackUI() {
-    console.log('🔄 Showing fallback UI...');
-    
-    // Show basic UI even if data loading fails
     const stockElements = document.querySelectorAll('.stock-text');
     stockElements.forEach(element => {
         element.innerHTML = '<span class="text-muted">Loading...</span>';
@@ -101,13 +53,9 @@ function showFallbackUI() {
 
 function setupAuthStateListener() {
     onAuthStateChanged(auth, (user) => {
-        console.log('👤 Auth state changed:', user ? user.email : 'No user');
         currentUser = user;
         updateAuthUI();
-        
-        if (user) {
-            loadUserReservations();
-        }
+        if (user) loadUserReservations();
     });
 }
 
@@ -123,12 +71,7 @@ function updateAuthUI() {
         if (accountBtn) accountBtn.style.display = 'inline-block';
         if (logoutBtn) logoutBtn.style.display = 'inline-block';
         
-        const adminEmails = [
-            'admin@bluewaveresort.com',
-            'manager@bluewaveresort.com',
-            'supervisor@bluewaveresort.com',
-            'wendellcruz398@gmail.com'
-        ];
+        const adminEmails = ['admin@bluewaveresort.com', 'manager@bluewaveresort.com', 'supervisor@bluewaveresort.com', 'wendellcruz398@gmail.com'];
         
         if (adminEmails.includes(currentUser.email)) {
             if (adminBtn) adminBtn.style.display = 'inline-block';
@@ -151,56 +94,32 @@ function updateAuthUI() {
 function setupEventListeners() {
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
-        console.log('🔑 Setting up login button event listener');
-        loginBtn.addEventListener('click', () => {
-            console.log('🔑 Login button clicked');
-            showLoginModal();
-        });
-        console.log('✅ Login button event listener set up');
-    } else {
-        console.error('❌ Login button not found');
+        loginBtn.addEventListener('click', showLoginModal);
     }
 
     const accountBtn = document.getElementById('accountBtn');
     if (accountBtn) {
-        accountBtn.addEventListener('click', () => {
-            console.log('👤 Account button clicked');
-            showAccountModal();
-        });
+        accountBtn.addEventListener('click', showAccountModal);
     }
 
     const adminBtn = document.getElementById('adminBtn');
     if (adminBtn) {
-        adminBtn.addEventListener('click', () => {
-            console.log('⚙️ Admin button clicked');
-            window.location.href = 'admin.html';
-        });
+        adminBtn.addEventListener('click', () => window.location.href = 'admin.html');
     }
 
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            console.log('🚪 Logout button clicked');
-            handleLogout();
-        });
+        logoutBtn.addEventListener('click', handleLogout);
     }
 
     setupBookNowButtons();
 }
 
 function showLoginModal() {
-    console.log('🔑 showLoginModal called');
     const modal = document.getElementById('loginModal');
-    console.log('🔍 Login modal element found:', !!modal);
-    
     if (modal) {
-        console.log('🎭 Creating Bootstrap modal instance...');
         const bootstrapModal = new bootstrap.Modal(modal);
-        console.log('✅ Bootstrap modal created, showing...');
         bootstrapModal.show();
-        console.log('✅ Login modal should now be visible');
-    } else {
-        console.error('❌ Login modal element not found in DOM');
     }
 }
 
@@ -215,25 +134,15 @@ function showAccountModal() {
 
 
 function showBookingModal() {
-    console.log('📅 showBookingModal called');
     const modal = document.getElementById('bookingModal');
-    console.log('🔍 Booking modal element found:', !!modal);
-    
     if (modal) {
-        console.log('📝 Loading booking content...');
         loadBookingContent();
-        console.log('🎭 Showing booking modal...');
         const bootstrapModal = new bootstrap.Modal(modal);
         bootstrapModal.show();
-        console.log('✅ Booking modal should now be visible');
-    } else {
-        console.error('❌ Booking modal not found in DOM');
     }
 }
 
 async function handleLogin() {
-    console.log('🔐 Attempting login...');
-    
     const email = document.getElementById('emailInput').value.trim();
     const password = document.getElementById('passwordInput').value;
 
@@ -246,13 +155,12 @@ async function handleLogin() {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         currentUser = userCredential.user;
         
-        console.log('✅ Login successful:', currentUser.email);
         showAlert('Login successful!', 'success');
         
         // Close the modal with simplified approach
         setTimeout(() => {
             const modal = document.getElementById('loginModal');
-            console.log('🔍 Modal element found:', modal);
+('🔍 Modal element found:', modal);
             
             if (modal) {
                 // Simple approach: just hide the modal
@@ -267,7 +175,7 @@ async function handleLogin() {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
                 backdrops.forEach(backdrop => {
                     backdrop.remove();
-                    console.log('🔍 Removed backdrop');
+('🔍 Removed backdrop');
                 });
                 
                 // Also remove any backdrop that might be added to body
@@ -280,7 +188,7 @@ async function handleLogin() {
                     focusedElement.blur();
                 }
                 
-                console.log('✅ Login modal closed successfully');
+('✅ Login modal closed successfully');
             }
             
             // Clear form fields
@@ -292,7 +200,7 @@ async function handleLogin() {
         }, 500); // Increased delay to ensure alert shows first
         
     } catch (error) {
-        console.error('❌ Login error:', error);
+('❌ Login error:', error);
         
         // Provide user-friendly error messages
         let errorMessage = 'Login failed. Please try again.';
@@ -325,7 +233,7 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-    console.log('📝 Attempting registration...');
+('📝 Attempting registration...');
     
     const firstName = document.getElementById('firstNameInput').value.trim();
     const lastName = document.getElementById('lastNameInput').value.trim();
@@ -351,19 +259,19 @@ async function handleRegister() {
             await updateProfile(currentUser, {
                 displayName: `${firstName} ${lastName}`
             });
-            console.log('✅ Display name updated successfully');
+('✅ Display name updated successfully');
         } catch (profileError) {
-            console.warn('⚠️ Could not update display name:', profileError);
+('⚠️ Could not update display name:', profileError);
             // Continue with registration even if display name update fails
         }
         
-        console.log('✅ Registration successful:', currentUser.email);
+('✅ Registration successful:', currentUser.email);
         showAlert('Registration successful!', 'success');
         
         // Close the modal with simplified approach
         setTimeout(() => {
             const modal = document.getElementById('loginModal');
-            console.log('🔍 Modal element found:', modal);
+('🔍 Modal element found:', modal);
             
             if (modal) {
                 // Simple approach: just hide the modal
@@ -378,7 +286,7 @@ async function handleRegister() {
                 const backdrops = document.querySelectorAll('.modal-backdrop');
                 backdrops.forEach(backdrop => {
                     backdrop.remove();
-                    console.log('🔍 Removed backdrop');
+('🔍 Removed backdrop');
                 });
                 
                 // Also remove any backdrop that might be added to body
@@ -391,7 +299,7 @@ async function handleRegister() {
                     focusedElement.blur();
                 }
                 
-                console.log('✅ Modal closed successfully');
+('✅ Modal closed successfully');
             }
             
             // Clear form fields
@@ -407,7 +315,7 @@ async function handleRegister() {
         }, 500); // Increased delay to ensure alert shows first
         
     } catch (error) {
-        console.error('❌ Registration error:', error);
+('❌ Registration error:', error);
         
         // Provide user-friendly error messages
         let errorMessage = 'Registration failed. Please try again.';
@@ -440,21 +348,21 @@ async function handleLogout() {
     try {
         await signOut(auth);
         currentUser = null;
-        console.log('✅ Logout successful');
+('✅ Logout successful');
         showAlert('Logged out successfully!', 'success');
     } catch (error) {
-        console.error('❌ Logout error:', error);
+('❌ Logout error:', error);
         showAlert('Logout failed: ' + error.message, 'error');
     }
 }
 
 async function loadRooms() {
-    console.log('🏨 Loading rooms...');
+('🏨 Loading rooms...');
     
     // Check cache first
     if (dataCache.rooms && dataCache.lastUpdated && 
         (Date.now() - dataCache.lastUpdated) < dataCache.cacheTimeout) {
-        console.log('📋 Using cached rooms data');
+('📋 Using cached rooms data');
         rooms = dataCache.rooms;
         updateStockDisplay();
         updateAccommodationsDisplay();
@@ -464,21 +372,21 @@ async function loadRooms() {
     try {
         const roomsSnapshot = await getDocs(collection(db, 'rooms'));
         rooms = roomsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('📋 Rooms from Firebase:', rooms.length);
+('📋 Rooms from Firebase:', rooms.length);
         
         if (rooms.length === 0) {
-            console.log('📝 No rooms found in Firebase, using sample data');
+('📝 No rooms found in Firebase, using sample data');
             const { sampleRooms } = await import('./firebase-config.js');
             rooms = sampleRooms.map((room, index) => ({ id: `sample-room-${index}`, ...room }));
-            console.log('📋 Sample rooms loaded:', rooms.length);
+('📋 Sample rooms loaded:', rooms.length);
         }
         
         // Update cache
         dataCache.rooms = rooms;
         dataCache.lastUpdated = Date.now();
         
-        console.log('📋 Final rooms loaded:', rooms.length);
-        console.log('🏨 Room names:', rooms.map(r => r.name));
+('📋 Final rooms loaded:', rooms.length);
+('🏨 Room names:', rooms.map(r => r.name));
         
         // Ensure rooms array is properly set before updating display
         if (rooms && rooms.length > 0) {
@@ -487,16 +395,16 @@ async function loadRooms() {
         }
         
     } catch (error) {
-        console.error('❌ Error loading rooms:', error);
+('❌ Error loading rooms:', error);
         try {
             const { sampleRooms } = await import('./firebase-config.js');
             rooms = sampleRooms.map((room, index) => ({ id: `sample-room-${index}`, ...room }));
-            console.log('📋 Fallback rooms loaded:', rooms.length);
+('📋 Fallback rooms loaded:', rooms.length);
             if (rooms && rooms.length > 0) {
                 updateStockDisplay();
             }
         } catch (fallbackError) {
-            console.error('❌ Fallback failed:', fallbackError);
+('❌ Fallback failed:', fallbackError);
         }
     }
 }
@@ -514,11 +422,11 @@ async function loadUserReservations() {
         
         reservations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         
-        console.log('📅 Loaded', reservations.length, 'reservations for user');
+('📅 Loaded', reservations.length, 'reservations for user');
         updateReservationsDisplay();
         
     } catch (error) {
-        console.error('❌ Error loading reservations:', error);
+('❌ Error loading reservations:', error);
     }
 }
 
@@ -571,20 +479,20 @@ function updateReservationsDisplay() {
 }
 
 function loadBookingContent() {
-    console.log('📝 loadBookingContent called');
-    console.log('👤 Current user:', currentUser ? currentUser.email : 'No user');
-    console.log('🏨 Selected room:', selectedRoom);
+('📝 loadBookingContent called');
+('👤 Current user:', currentUser ? currentUser.email : 'No user');
+('🏨 Selected room:', selectedRoom);
     
     if (!currentUser) {
-        console.log('❌ No current user, returning');
+('❌ No current user, returning');
         return;
     }
 
     const bookingContent = document.getElementById('bookingContent');
-    console.log('🔍 Booking content element found:', !!bookingContent);
+('🔍 Booking content element found:', !!bookingContent);
     
     if (!bookingContent || !selectedRoom) {
-        console.log('❌ Missing booking content element or selected room');
+('❌ Missing booking content element or selected room');
         return;
     }
 
@@ -683,12 +591,6 @@ async function handleBookingSubmit(e) {
         const nights = Math.ceil((new Date(checkOut) - new Date(checkIn)) / (1000 * 60 * 60 * 24));
         const totalPrice = nights * selectedRoom.price;
 
-        console.log('📝 Creating reservation with room details:', {
-            roomId: selectedRoom.id,
-            roomName: selectedRoom.name,
-            roomStock: selectedRoom.stock,
-            roomStatus: selectedRoom.status
-        });
 
         const reservation = {
             userId: currentUser.uid,
@@ -716,10 +618,10 @@ async function handleBookingSubmit(e) {
         
         const stockUpdate = await updateRoomStock(selectedRoom.id, 1);
         if (stockUpdate.success) {
-            console.log('📦 Room stock updated successfully');
+('📦 Room stock updated successfully');
             await loadRooms();
         } else {
-            console.error('❌ Failed to update room stock:', stockUpdate.error);
+('❌ Failed to update room stock:', stockUpdate.error);
         }
         
         showAlert('Reservation submitted successfully!', 'success');
@@ -733,7 +635,7 @@ async function handleBookingSubmit(e) {
         loadUserReservations();
         
     } catch (error) {
-        console.error('❌ Error creating reservation:', error);
+('❌ Error creating reservation:', error);
         showAlert('Failed to create reservation: ' + error.message, 'error');
     }
 }
@@ -849,7 +751,6 @@ function loadAccountContent() {
         </div>
     `;
     
-    // Load user messages and replies
     loadUserMessages();
 }
 
@@ -858,7 +759,7 @@ async function loadUserMessages() {
     if (!userMessagesContent) return;
     
     try {
-        console.log('🔍 Loading user messages for:', currentUser.email);
+('🔍 Loading user messages for:', currentUser.email);
         
         // Load user's contact messages (simplified query first)
         const userContactsQuery = query(
@@ -871,7 +772,7 @@ async function loadUserMessages() {
             ...doc.data()
         }));
         
-        console.log('📧 Found user contacts:', userContacts.length);
+('📧 Found user contacts:', userContacts.length);
         
         // Load replies to user's messages
         const userReplies = [];
@@ -888,7 +789,7 @@ async function loadUserMessages() {
             userReplies.push(...contactReplies);
         }
         
-        console.log('💬 Found user replies:', userReplies.length);
+('💬 Found user replies:', userReplies.length);
         
         // Display messages and replies
         if (userContacts.length === 0) {
@@ -946,8 +847,8 @@ async function loadUserMessages() {
         userMessagesContent.innerHTML = messagesHTML;
         
     } catch (error) {
-        console.error('❌ Error loading user messages:', error);
-        console.error('Error details:', error.message, error.code);
+('❌ Error loading user messages:', error);
+('Error details:', error.message, error.code);
         userMessagesContent.innerHTML = `
             <div class="alert alert-danger">
                 <i class="bi bi-exclamation-triangle me-2"></i>
@@ -1051,7 +952,7 @@ async function loadAdminContent() {
             </div>
         `;
     } catch (error) {
-        console.error('❌ Error loading admin content:', error);
+('❌ Error loading admin content:', error);
         adminContent.innerHTML = '<div class="alert alert-danger">Failed to load admin data</div>';
     }
 }
@@ -1072,15 +973,15 @@ async function updateReservationStatus(reservationId, newStatus) {
             });
             
             if (newStatus === 'completed' && previousStatus !== 'completed') {
-                console.log('🏨 Reservation completed, restoring room stock...');
+('🏨 Reservation completed, restoring room stock...');
                 if (roomId) {
                     const stockRestore = await restoreRoomStock(roomId, 1);
                     if (stockRestore.success) {
-                        console.log('📦 Room stock restored after reservation completion');
+('📦 Room stock restored after reservation completion');
                         await loadRooms();
                         showAlert(`Reservation ${newStatus} successfully! Room stock restored.`, 'success');
                     } else {
-                        console.error('❌ Failed to restore room stock:', stockRestore.error);
+('❌ Failed to restore room stock:', stockRestore.error);
                         showAlert(`Reservation ${newStatus} successfully! (Note: Stock restoration failed)`, 'warning');
                     }
                 } else {
@@ -1095,7 +996,7 @@ async function updateReservationStatus(reservationId, newStatus) {
             showAlert('Reservation not found', 'error');
         }
     } catch (error) {
-        console.error('❌ Error updating reservation:', error);
+('❌ Error updating reservation:', error);
         showAlert('Failed to update reservation', 'error');
     }
 }
@@ -1117,11 +1018,11 @@ async function cancelReservation(reservationId) {
                 if (roomId) {
                     const stockRestore = await restoreRoomStock(roomId, 1);
                     if (stockRestore.success) {
-                        console.log('📦 Room stock restored after reservation cancellation');
+('📦 Room stock restored after reservation cancellation');
                         await loadRooms();
                         showAlert('Reservation cancelled successfully! Room stock restored.', 'success');
                     } else {
-                        console.error('❌ Failed to restore room stock:', stockRestore.error);
+('❌ Failed to restore room stock:', stockRestore.error);
                         showAlert('Reservation cancelled successfully! (Note: Stock restoration failed)', 'warning');
                     }
                 } else {
@@ -1133,7 +1034,7 @@ async function cancelReservation(reservationId) {
                 showAlert('Reservation not found', 'error');
             }
         } catch (error) {
-            console.error('❌ Error cancelling reservation:', error);
+('❌ Error cancelling reservation:', error);
             showAlert('Failed to cancel reservation', 'error');
         }
     }
@@ -1144,11 +1045,11 @@ async function deleteReservation(reservationId) {
         try {
             await deleteDoc(doc(db, 'reservations', reservationId));
             
-            console.log('🗑️ Reservation permanently deleted (stock not restored)');
+('🗑️ Reservation permanently deleted (stock not restored)');
             showAlert('Reservation permanently deleted! (Note: Room stock was not restored)', 'success');
             loadAdminContent();
         } catch (error) {
-            console.error('❌ Error deleting reservation:', error);
+('❌ Error deleting reservation:', error);
             showAlert('Failed to delete reservation', 'error');
         }
     }
@@ -1266,19 +1167,19 @@ function showAlert(message, type) {
 }
 
 function setupBookNowButtons() {
-    console.log('🔄 Setting up Book Now buttons...');
+('🔄 Setting up Book Now buttons...');
     document.querySelectorAll('.book-now-btn').forEach(btn => {
         btn.removeEventListener('click', handleBookNowClick);
         btn.addEventListener('click', handleBookNowClick);
     });
-    console.log('✅ Book Now buttons set up:', document.querySelectorAll('.book-now-btn').length);
+('✅ Book Now buttons set up:', document.querySelectorAll('.book-now-btn').length);
 }
 
 async function handleBookNowClick(event) {
-    console.log('🏨 Book Now button clicked');
+('🏨 Book Now button clicked');
     
     if (!currentUser) {
-        console.log('❌ User not logged in, showing login modal');
+('❌ User not logged in, showing login modal');
         showAlert('Please login to make a reservation', 'warning');
         showLoginModal();
         return;
@@ -1286,13 +1187,13 @@ async function handleBookNowClick(event) {
     
     // Ensure rooms are loaded before proceeding
     if (rooms.length === 0) {
-        console.log('🔄 Rooms not loaded, loading now...');
+('🔄 Rooms not loaded, loading now...');
         try {
             await loadRooms();
             // Wait a bit for the rooms to be fully processed
             await new Promise(resolve => setTimeout(resolve, 100));
         } catch (error) {
-            console.error('❌ Error loading rooms:', error);
+('❌ Error loading rooms:', error);
             showAlert('Failed to load room information. Please try again.', 'error');
             return;
         }
@@ -1305,66 +1206,42 @@ async function handleBookNowClick(event) {
     }
     
     if (!buttonElement) {
-        console.error('❌ Could not find book-now-btn element');
+('❌ Could not find book-now-btn element');
         showAlert('Invalid button element. Please try again.', 'error');
         return;
     }
     
     const roomName = buttonElement.getAttribute('data-room');
-    console.log('🔍 Looking for room:', roomName);
-    console.log('📋 Available rooms:', rooms.map(r => r.name));
+('🔍 Looking for room:', roomName);
+('📋 Available rooms:', rooms.map(r => r.name));
     
     if (!roomName) {
-        console.error('❌ No room name found in data-room attribute');
-        console.log('🔍 Button element:', buttonElement);
-        console.log('🔍 Button attributes:', buttonElement.attributes);
+('❌ No room name found in data-room attribute');
+('🔍 Button element:', buttonElement);
+('🔍 Button attributes:', buttonElement.attributes);
         showAlert('Invalid room selection. Please try again.', 'error');
         return;
     }
     
     selectedRoom = rooms.find(r => r.name === roomName);
-    console.log('✅ Selected room:', selectedRoom);
-    console.log('🔍 Room details:', selectedRoom ? {
-        id: selectedRoom.id,
-        name: selectedRoom.name,
-        stock: selectedRoom.stock,
-        status: selectedRoom.status
-    } : 'null');
-    console.log('🔍 All available rooms:', rooms.map(r => ({ name: r.name, id: r.id })));
-    
     if (selectedRoom) {
-        console.log('📦 Checking room availability...');
-        console.log('📊 Room stock:', selectedRoom.stock, 'Status:', selectedRoom.status);
-        
         if (selectedRoom.stock <= 0 || selectedRoom.status === 'unavailable') {
-            console.log('❌ Room not available - no stock');
             showAlert(`Sorry, ${selectedRoom.name} is currently unavailable. No rooms in stock.`, 'error');
             return;
         }
-        
-        console.log('🎯 Opening booking modal for:', selectedRoom.name);
         showBookingModal();
     } else {
-        console.error('❌ Room not found:', roomName);
-        console.log('📋 Available room names:', rooms.map(r => r.name));
         showAlert(`Room "${roomName}" not found. Available rooms: ${rooms.map(r => r.name).join(', ')}`, 'error');
     }
 }
 
 function updateStockDisplay() {
-    console.log('📊 Updating stock display on buttons...');
-    console.log('📋 Current rooms loaded:', rooms.length);
-    console.log('🏨 Room names:', rooms.map(r => r.name));
-    
     const buttons = document.querySelectorAll('.book-now-btn');
-    console.log('🔘 Found buttons:', buttons.length);
     
     buttons.forEach(btn => {
         const roomName = btn.getAttribute('data-room');
-        console.log('🔍 Processing button for room:', roomName);
         
         const room = rooms.find(r => r.name === roomName);
-        console.log('🏨 Found room data:', room);
         
         if (room) {
             const stockText = btn.querySelector('small');
@@ -1375,20 +1252,16 @@ function updateStockDisplay() {
                     btn.disabled = false;
                     btn.classList.remove('btn-secondary');
                     btn.classList.add('btn-primary');
-                    console.log('✅ Updated button for', roomName, '- Available:', room.stock);
                 } else {
                     stockText.textContent = 'No rooms available';
                     stockText.className = 'd-block text-white';
                     btn.disabled = true;
                     btn.classList.remove('btn-primary');
                     btn.classList.add('btn-secondary');
-                    console.log('❌ Updated button for', roomName, '- Unavailable');
                 }
             } else {
-                console.log('⚠️ No stock text element found for', roomName);
             }
         } else {
-            console.log('⚠️ No room data found for', roomName);
             const stockText = btn.querySelector('small');
             if (stockText) {
                 stockText.textContent = '5 rooms available';
@@ -1400,23 +1273,18 @@ function updateStockDisplay() {
         }
     });
     
-    console.log('✅ Stock display update completed');
 }
 
 function updateAccommodationsDisplay() {
-    console.log('🏨 Updating accommodations display...');
-    console.log('📋 Current rooms loaded:', rooms.length);
     
     // Only update if we're on the accommodations page
     if (!window.location.pathname.includes('resort.html') && !window.location.pathname.includes('accommodation.html')) {
-        console.log('📄 Not on accommodations page, skipping display update');
         return;
     }
     
     // Find the container where rooms should be displayed
     const roomsContainer = document.querySelector('.rooms-container');
     if (!roomsContainer) {
-        console.log('⚠️ Rooms container not found, creating one...');
         // Find the first .rooms div and replace its content
         const firstRoomDiv = document.querySelector('.container-fluid.rooms');
         if (firstRoomDiv) {
@@ -1433,13 +1301,11 @@ function updateAccommodationsDisplay() {
                 div.style.display = 'none';
             });
         } else {
-            console.log('❌ No rooms container found');
             return;
         }
     }
     
     if (rooms.length === 0) {
-        console.log('📝 No rooms to display');
         return;
     }
     
@@ -1470,7 +1336,6 @@ function updateAccommodationsDisplay() {
     const container = document.querySelector('.rooms-container');
     if (container) {
         container.innerHTML = roomsHTML;
-        console.log('✅ Accommodations display updated with', rooms.length, 'rooms');
         
         // Re-setup event listeners for the new buttons
         setupBookNowButtons();

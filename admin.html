@@ -49,6 +49,11 @@
                     <i class="bi bi-envelope me-2"></i>Contact Messages
                 </button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+                    <i class="bi bi-people me-2"></i>Registered Users
+                </button>
+            </li>
         </ul>
 
         <!-- Tab Content -->
@@ -114,6 +119,22 @@
                                             </div>
                                             <div class="col-auto">
                                                 <i class="bi bi-envelope fa-2x text-gray-300"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-6 mb-4">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-white text-uppercase mb-1">Registered Users</div>
+                                                <div class="h5 mb-0 font-weight-bold text-white" id="totalUsers">0</div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="bi bi-people fa-2x text-gray-300"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -223,6 +244,37 @@
                                 </thead>
                                 <tbody id="contactsTable">
                                     <!-- Contact messages will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registered Users Tab -->
+            <div class="tab-pane fade" id="users" role="tabpanel">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5>Registered Users</h5>
+                        <button class="btn btn-primary" onclick="loadUsers()">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Member Since</th>
+                                        <th>Total Bookings</th>
+                                        <th>Last Login</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTable">
+                                    <!-- Users will be loaded here -->
                                 </tbody>
                             </table>
                         </div>

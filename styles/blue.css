@@ -229,19 +229,22 @@ body {
   background-color: rgb(255, 255, 255);
   text-align: center;
   padding: 10vh 5vw;
-  h1 {
-    font-weight: bold;
-    font-size: clamp(1.5rem, 4vw, 3rem);
-  }
 }
+
+.reservation h1 {
+  font-weight: bold;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
 .page-footer {
   background-color: #3a51ff;
   color: #ccc;
   padding: 60px 0 30px;
-  img {
-    width: 150px;
-    height: 100px;
-  }
+}
+
+.page-footer img {
+  width: 150px;
+  height: 100px;
 }
 button {
   padding: 5px 50px 5px 50px;

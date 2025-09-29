@@ -67,41 +67,41 @@ export const sampleRooms = [
 
 export async function forceAddRoomsToFirebase() {
     try {
-        console.log("🔄 Force adding rooms to Firebase...");
+        
         
         const roomsSnapshot = await getDocs(collection(db, "rooms"));
-        console.log("📋 Current rooms in Firebase:", roomsSnapshot.docs.length);
+        
         
         if (roomsSnapshot.docs.length === 0) {
-            console.log("📝 No rooms found, adding all sample rooms...");
+            
             for (const room of sampleRooms) {
                 const docRef = await addDoc(collection(db, "rooms"), room);
-                console.log("✅ Added room:", room.name, "with ID:", docRef.id);
+                
             }
-            console.log("🎉 All rooms added successfully!");
+            
         } else {
-            console.log("📋 Rooms already exist, checking if all are present...");
+            
             
             const existingRooms = roomsSnapshot.docs.map(doc => doc.data().name);
             const missingRooms = sampleRooms.filter(room => !existingRooms.includes(room.name));
             
             if (missingRooms.length > 0) {
-                console.log("📝 Adding missing rooms:", missingRooms.map(r => r.name));
+                
                 for (const room of missingRooms) {
                     const docRef = await addDoc(collection(db, "rooms"), room);
-                    console.log("✅ Added missing room:", room.name, "with ID:", docRef.id);
+                    
                 }
             } else {
-                console.log("✅ All rooms are already present in Firebase");
+                
             }
         }
         
         const finalSnapshot = await getDocs(collection(db, "rooms"));
-        console.log("📊 Final room count in Firebase:", finalSnapshot.docs.length);
-        console.log("🏨 Room names:", finalSnapshot.docs.map(doc => doc.data().name));
+        
+        
         
     } catch (error) {
-        console.error("❌ Error force adding rooms to Firebase:", error);
+        
         throw error;
     }
 }
@@ -109,7 +109,7 @@ export async function forceAddRoomsToFirebase() {
 
 export async function updateRoomStock(roomId, decreaseBy = 1) {
     try {
-        console.log(`📦 Updating room stock for room ID: ${roomId}, decreasing by: ${decreaseBy}`);
+        
         
         const roomDoc = await getDocs(query(collection(db, "rooms"), where("__name__", "==", roomId)));
         
@@ -125,21 +125,21 @@ export async function updateRoomStock(roomId, decreaseBy = 1) {
                 lastUpdated: new Date().toISOString()
             });
             
-            console.log(`✅ Room stock updated: ${roomData.name} - Stock: ${roomData.stock} → ${newStock}, Status: ${newStatus}`);
+            
             return { success: true, newStock, newStatus };
         } else {
-            console.error("❌ Room not found:", roomId);
+            
             return { success: false, error: "Room not found" };
         }
     } catch (error) {
-        console.error("❌ Error updating room stock:", error);
+        
         return { success: false, error: error.message };
     }
 }
 
 export async function restoreRoomStock(roomId, increaseBy = 1) {
     try {
-        console.log(`📦 Restoring room stock for room ID: ${roomId}, increasing by: ${increaseBy}`);
+        
         
         const roomDoc = await getDocs(query(collection(db, "rooms"), where("__name__", "==", roomId)));
         
@@ -155,21 +155,21 @@ export async function restoreRoomStock(roomId, increaseBy = 1) {
                 lastUpdated: new Date().toISOString()
             });
             
-            console.log(`✅ Room stock restored: ${roomData.name} - Stock: ${roomData.stock} → ${newStock}, Status: ${newStatus}`);
+            
             return { success: true, newStock, newStatus };
         } else {
-            console.error("❌ Room not found:", roomId);
+            
             return { success: false, error: "Room not found" };
         }
     } catch (error) {
-        console.error("❌ Error restoring room stock:", error);
+        
         return { success: false, error: error.message };
     }
 }
 
 export async function checkRoomAvailability(roomId) {
     try {
-        console.log(`🔍 Checking room availability for room ID: ${roomId}`);
+        
         
         const roomDoc = await getDocs(query(collection(db, "rooms"), where("__name__", "==", roomId)));
         
@@ -177,7 +177,7 @@ export async function checkRoomAvailability(roomId) {
             const roomData = roomDoc.docs[0].data();
             const isAvailable = roomData.stock > 0 && roomData.status === "available";
             
-            console.log(`🔍 Room availability check: ${roomData.name} - Stock: ${roomData.stock}, Status: ${roomData.status}, Available: ${isAvailable}`);
+            
             return { 
                 available: isAvailable, 
                 stock: roomData.stock, 
@@ -185,18 +185,18 @@ export async function checkRoomAvailability(roomId) {
                 roomName: roomData.name 
             };
         } else {
-            console.error("❌ Room not found:", roomId);
+            
             return { available: false, error: "Room not found" };
         }
     } catch (error) {
-        console.error("❌ Error checking room availability:", error);
+        
         return { available: false, error: error.message };
     }
 }
 
 export async function cleanupDuplicateRooms() {
     try {
-        console.log("🧹 Starting duplicate room cleanup...");
+        
         
         const roomsSnapshot = await getDocs(collection(db, "rooms"));
         const rooms = roomsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -215,24 +215,24 @@ export async function cleanupDuplicateRooms() {
         // Process each group
         for (const [roomName, roomList] of Object.entries(roomGroups)) {
             if (roomList.length > 1) {
-                console.log(`🔍 Found ${roomList.length} duplicates for room: ${roomName}`);
+                
                 
                 // Keep the first room, delete the rest
                 const roomsToDelete = roomList.slice(1);
                 
                 for (const roomToDelete of roomsToDelete) {
                     await deleteDoc(doc(db, "rooms", roomToDelete.id));
-                    console.log(`🗑️ Deleted duplicate room: ${roomToDelete.name} (ID: ${roomToDelete.id})`);
+                    
                     duplicatesRemoved++;
                 }
             }
         }
         
-        console.log(`✅ Cleanup complete. Removed ${duplicatesRemoved} duplicate rooms.`);
+        
         return { success: true, duplicatesRemoved };
         
     } catch (error) {
-        console.error("❌ Error cleaning up duplicate rooms:", error);
+        
         return { success: false, error: error.message };
     }
 }

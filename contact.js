@@ -5,28 +5,19 @@ import {
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📧 Initializing Contact Form...');
-    
     try {
         setupAuthStateListener();
         setupContactForm();
-        console.log('✅ Contact form initialized successfully!');
-        
     } catch (error) {
-        console.error('❌ Error initializing contact form:', error);
         showAlert('Failed to initialize contact form', 'error');
     }
 });
 
 function setupAuthStateListener() {
     onAuthStateChanged(auth, (user) => {
-        console.log('👤 Auth state changed:', user ? user.email : 'No user');
         currentUser = user;
         updateContactFormVisibility();
-        
-        if (user) {
-            prefillUserInfo();
-        }
+        if (user) prefillUserInfo();
     });
 }
 
@@ -61,19 +52,19 @@ function prefillUserInfo() {
 function setupContactForm() {
     const form = document.getElementById('contactForm');
     if (!form) {
-        console.log('⚠️ Contact form not found');
+        
         return;
     }
     
     form.addEventListener('submit', handleContactSubmission);
-    console.log('✅ Contact form event listener set up');
+    
 }
 
 async function handleContactSubmission(event) {
     event.preventDefault();
     event.stopPropagation();
     
-    console.log('📝 Processing contact form submission...');
+    
     
     const form = event.target;
     const nameField = document.getElementById('name');
@@ -131,12 +122,12 @@ async function handleContactSubmission(event) {
             updatedAt: new Date().toISOString()
         };
         
-        console.log('📝 Saving contact data to Firebase:', contactData);
+        
         
         const docRef = await addDoc(collection(db, 'contactSubmissions'), contactData);
-        console.log('✅ Contact submission saved with ID:', docRef.id);
         
-        console.log('✅ Contact submission saved successfully!');
+        
+        
         showAlert('Thank you for your message! We will get back to you soon.', 'success');
         
         // Reset form
@@ -151,7 +142,7 @@ async function handleContactSubmission(event) {
         }));
         
     } catch (error) {
-        console.error('❌ Error saving contact submission:', error);
+        
         showAlert('Failed to send message. Please try again.', 'error');
     } finally {
         setLoadingState(false);
@@ -227,7 +218,7 @@ function showAlert(message, type) {
 }
 
 function testFirebaseConnection() {
-    console.log('🧪 Testing Firebase connection...');
+    
     
     if (currentUser) {
         showAlert('Firebase connection working! User is logged in.', 'success');

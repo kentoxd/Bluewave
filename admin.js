@@ -13,7 +13,7 @@ let currentReplyContactId = null;
 let currentRoomId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing Admin Dashboard...');
+('🚀 Initializing Admin Dashboard...');
     
     // Show admin UI immediately - don't wait for data loading
     showAdminInitialUI();
@@ -21,38 +21,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Set up authentication state listener immediately (non-blocking)
         onAuthStateChanged(auth, (user) => {
-            console.log('🔐 Auth state changed:', user ? `User: ${user.email}` : 'No user');
+('🔐 Auth state changed:', user ? `User: ${user.email}` : 'No user');
             if (user) {
-                const adminEmails = [
-                    'admin@bluewaveresort.com',
-                    'manager@bluewaveresort.com',
-                    'supervisor@bluewaveresort.com',
-                    'wendellcruz398@gmail.com'
-                ];
+        const adminEmails = ['admin@bluewaveresort.com', 'manager@bluewaveresort.com', 'supervisor@bluewaveresort.com', 'wendellcruz398@gmail.com'];
                 
-                console.log('📧 Checking admin access for:', user.email);
-                console.log('📧 Admin emails:', adminEmails);
+('📧 Checking admin access for:', user.email);
+('📧 Admin emails:', adminEmails);
                 
                 if (adminEmails.includes(user.email)) {
                     currentUser = user;
-                    console.log('✅ Admin logged in:', user.email);
+('✅ Admin logged in:', user.email);
                     loadAdminContent();
                 } else {
-                    console.log('❌ Unauthorized access attempt:', user.email);
+('❌ Unauthorized access attempt:', user.email);
                     alert('Unauthorized access. Only admins can access this page.');
                     window.location.href = 'index.html';
                 }
             } else {
-                console.log('❌ No user logged in');
+('❌ No user logged in');
                 window.location.href = 'index.html';
             }
         });
         
         setupEventListeners();
-        console.log('✅ Admin dashboard initialized successfully!');
+('✅ Admin dashboard initialized successfully!');
         
     } catch (error) {
-        console.error('❌ Error initializing admin dashboard:', error);
+('❌ Error initializing admin dashboard:', error);
         showAdminFallbackUI();
     }
 });
@@ -81,10 +76,10 @@ function setupEventListeners() {
     // Listen for cross-tab synchronization
     window.addEventListener('storage', (e) => {
         if (e.key === 'roomsUpdated') {
-            console.log('🔄 Rooms updated in another tab, refreshing...');
+('🔄 Rooms updated in another tab, refreshing...');
             loadRoomsTable();
         } else if (e.key === 'contactUpdated') {
-            console.log('🔄 Contact messages updated in another tab, refreshing...');
+('🔄 Contact messages updated in another tab, refreshing...');
             loadContacts();
             loadContactsTable();
         }
@@ -92,7 +87,7 @@ function setupEventListeners() {
 }
 
 function showAdminInitialUI() {
-    console.log('🎨 Showing admin UI immediately...');
+('🎨 Showing admin UI immediately...');
     
     // Show loading states for all tables
     showAdminLoadingStates();
@@ -155,7 +150,7 @@ function showAdminLoadingStates() {
 }
 
 function showAdminFallbackUI() {
-    console.log('🔄 Showing admin fallback UI...');
+('🔄 Showing admin fallback UI...');
     
     // Show error states
     const reservationsTable = document.getElementById('reservationsTable');
@@ -172,63 +167,71 @@ function showAdminFallbackUI() {
 }
 
 async function loadAdminContent() {
-    console.log('📊 Loading admin content...');
+('📊 Loading admin content...');
     
     try {
-        console.log('🔄 Starting to load all data in parallel...');
+('🔄 Starting to load all data in parallel...');
         
         // Load all data in parallel instead of sequentially
-        const [reservationsResult, roomsResult, contactsResult] = await Promise.allSettled([
+        const [reservationsResult, roomsResult, contactsResult, usersResult] = await Promise.allSettled([
             loadReservations(),
             loadRooms(),
-            loadContacts()
+            loadContacts(),
+            loadUsers()
         ]);
         
         // Handle results
         if (reservationsResult.status === 'fulfilled') {
-            console.log('✅ Reservations loaded successfully');
+('✅ Reservations loaded successfully');
         } else {
-            console.error('❌ Failed to load reservations:', reservationsResult.reason);
+('❌ Failed to load reservations:', reservationsResult.reason);
         }
         
         if (roomsResult.status === 'fulfilled') {
-            console.log('✅ Rooms loaded successfully');
+('✅ Rooms loaded successfully');
         } else {
-            console.error('❌ Failed to load rooms:', roomsResult.reason);
+('❌ Failed to load rooms:', roomsResult.reason);
         }
         
         if (contactsResult.status === 'fulfilled') {
-            console.log('✅ Contacts loaded successfully');
+('✅ Contacts loaded successfully');
         } else {
-            console.error('❌ Failed to load contacts:', contactsResult.reason);
+('❌ Failed to load contacts:', contactsResult.reason);
         }
         
-        console.log('📊 Data loaded - Rooms:', rooms.length, 'Reservations:', reservations.length, 'Contacts:', contacts.length);
+        if (usersResult.status === 'fulfilled') {
+('✅ Users loaded successfully');
+        } else {
+('❌ Failed to load users:', usersResult.reason);
+        }
+        
+('📊 Data loaded - Rooms:', rooms.length, 'Reservations:', reservations.length, 'Contacts:', contacts.length, 'Users:', users.length);
         
         // Update UI with loaded data
         updateStatsCards();
         loadReservationsTable();
         loadRoomsTable();
         loadContactsTable();
+        loadUsersTable();
         
-        console.log('✅ Admin content loaded successfully');
+('✅ Admin content loaded successfully');
         
     } catch (error) {
-        console.error('❌ Error loading admin content:', error);
+('❌ Error loading admin content:', error);
         showAlert('Failed to load admin content: ' + error.message, 'error');
     }
 }
 
 async function loadReservations() {
     try {
-        console.log('📅 Loading reservations...');
+('📅 Loading reservations...');
         const reservationsSnapshot = await getDocs(collection(db, 'reservations'));
         reservations = reservationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
         // Fix reservations with missing guest names
         const reservationsToUpdate = reservations.filter(r => !r.guestName || r.guestName === 'undefined');
         if (reservationsToUpdate.length > 0) {
-            console.log('🔧 Fixing', reservationsToUpdate.length, 'reservations with missing guest names...');
+('🔧 Fixing', reservationsToUpdate.length, 'reservations with missing guest names...');
             
             for (const reservation of reservationsToUpdate) {
                 try {
@@ -246,50 +249,50 @@ async function loadReservations() {
                         reservations[index] = { ...reservations[index], ...updateData };
                     }
                 } catch (error) {
-                    console.error('❌ Error updating reservation', reservation.id, ':', error);
+('❌ Error updating reservation', reservation.id, ':', error);
                 }
             }
             
-            console.log('✅ Fixed reservations with missing guest names');
+('✅ Fixed reservations with missing guest names');
         }
         
-        console.log('✅ Reservations loaded:', reservations.length);
+('✅ Reservations loaded:', reservations.length);
     } catch (error) {
-        console.error('❌ Error loading reservations:', error);
+('❌ Error loading reservations:', error);
         throw error;
     }
 }
 
 async function loadRooms() {
     try {
-        console.log('🏠 Loading rooms...');
+('🏠 Loading rooms...');
         const roomsSnapshot = await getDocs(collection(db, 'rooms'));
         rooms = roomsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Rooms loaded:', rooms.length);
+('✅ Rooms loaded:', rooms.length);
         
         // If no rooms found, initialize with sample data
         if (rooms.length === 0) {
-            console.log('📝 No rooms found, initializing with sample data...');
+('📝 No rooms found, initializing with sample data...');
             await forceAddRoomsToFirebase();
             // Reload rooms after adding sample data
             const newRoomsSnapshot = await getDocs(collection(db, 'rooms'));
             rooms = newRoomsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log('✅ Sample rooms loaded:', rooms.length);
+('✅ Sample rooms loaded:', rooms.length);
         }
     } catch (error) {
-        console.error('❌ Error loading rooms:', error);
+('❌ Error loading rooms:', error);
         throw error;
     }
 }
 
 async function loadContacts() {
     try {
-        console.log('📧 Loading contact messages...');
+('📧 Loading contact messages...');
         const contactsSnapshot = await getDocs(collection(db, 'contactSubmissions'));
         contacts = contactsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log('✅ Contact messages loaded:', contacts.length);
+('✅ Contact messages loaded:', contacts.length);
     } catch (error) {
-        console.error('❌ Error loading contact messages:', error);
+('❌ Error loading contact messages:', error);
         throw error;
     }
 }
@@ -299,11 +302,13 @@ function updateStatsCards() {
     const confirmedReservations = reservations.filter(r => r.status === 'confirmed').length;
     const pendingReservations = reservations.filter(r => r.status === 'pending').length;
     const totalContacts = contacts.length;
+    const totalUsers = users.length;
     
     document.getElementById('totalReservations').textContent = totalReservations;
     document.getElementById('confirmedReservations').textContent = confirmedReservations;
     document.getElementById('pendingReservations').textContent = pendingReservations;
     document.getElementById('totalContacts').textContent = totalContacts;
+    document.getElementById('totalUsers').textContent = totalUsers;
 }
 
 function loadReservationsTable() {
@@ -348,11 +353,11 @@ function loadReservationsTable() {
 function loadRoomsTable() {
     const tableBody = document.getElementById('roomsTable');
     if (!tableBody) {
-        console.log('⚠️ Rooms table body not found');
+('⚠️ Rooms table body not found');
         return;
     }
     
-    console.log('🏠 Loading rooms table with', rooms.length, 'rooms');
+('🏠 Loading rooms table with', rooms.length, 'rooms');
     
     if (rooms.length === 0) {
         tableBody.innerHTML = `
@@ -494,11 +499,11 @@ async function updateReservationStatus(reservationId, newStatus) {
             if (room) {
                 const stockRestore = await restoreRoomStock(room.id);
                 if (stockRestore.success) {
-                    console.log('📦 Room stock restored after reservation completion');
+('📦 Room stock restored after reservation completion');
                     await loadRooms();
                     showAlert(`Reservation ${newStatus} successfully! Room stock restored.`, 'success');
                 } else {
-                    console.error('❌ Failed to restore room stock:', stockRestore.error);
+('❌ Failed to restore room stock:', stockRestore.error);
                     showAlert(`Reservation ${newStatus} successfully! (Note: Stock restoration failed)`, 'warning');
                 }
             } else {
@@ -510,7 +515,7 @@ async function updateReservationStatus(reservationId, newStatus) {
         
         loadAdminContent();
     } catch (error) {
-        console.error('❌ Error updating reservation:', error);
+('❌ Error updating reservation:', error);
         showAlert('Failed to update reservation', 'error');
     }
 }
@@ -534,11 +539,11 @@ async function cancelReservation(reservationId) {
             if (room) {
                 const stockRestore = await restoreRoomStock(room.id);
                 if (stockRestore.success) {
-                    console.log('📦 Room stock restored after reservation cancellation');
+('📦 Room stock restored after reservation cancellation');
                     await loadRooms();
                     showAlert('Reservation cancelled successfully! Room stock restored.', 'success');
                 } else {
-                    console.error('❌ Failed to restore room stock:', stockRestore.error);
+('❌ Failed to restore room stock:', stockRestore.error);
                     showAlert('Reservation cancelled successfully! (Note: Stock restoration failed)', 'warning');
                 }
             } else {
@@ -547,7 +552,7 @@ async function cancelReservation(reservationId) {
             
             loadAdminContent();
         } catch (error) {
-            console.error('❌ Error cancelling reservation:', error);
+('❌ Error cancelling reservation:', error);
             showAlert('Failed to cancel reservation', 'error');
         }
     }
@@ -561,11 +566,11 @@ async function deleteReservation(reservationId) {
             // Remove from local data
             reservations = reservations.filter(r => r.id !== reservationId);
             
-            console.log('🗑️ Reservation permanently deleted (stock not restored)');
+('🗑️ Reservation permanently deleted (stock not restored)');
             showAlert('Reservation permanently deleted! (Note: Room stock was not restored)', 'success');
             loadAdminContent();
         } catch (error) {
-            console.error('❌ Error deleting reservation:', error);
+('❌ Error deleting reservation:', error);
             showAlert('Failed to delete reservation', 'error');
         }
     }
@@ -590,7 +595,7 @@ async function markContactAsRead(contactId) {
         updateStatsCards();
         showAlert('Contact marked as read', 'success');
     } catch (error) {
-        console.error('❌ Error marking contact as read:', error);
+('❌ Error marking contact as read:', error);
         showAlert('Failed to mark contact as read', 'error');
     }
 }
@@ -667,7 +672,7 @@ async function sendReply() {
         updateStatsCards();
         
     } catch (error) {
-        console.error('❌ Error sending reply:', error);
+('❌ Error sending reply:', error);
         showAlert('Failed to send reply', 'error');
     }
 }
@@ -684,7 +689,7 @@ async function deleteContact(contactId) {
             updateStatsCards();
             showAlert('Contact message deleted', 'success');
         } catch (error) {
-            console.error('❌ Error deleting contact:', error);
+('❌ Error deleting contact:', error);
             showAlert('Failed to delete contact message', 'error');
         }
     }
@@ -692,7 +697,7 @@ async function deleteContact(contactId) {
 
 // Room Management Functions
 function showAddRoomModal() {
-    console.log('🏠 Opening Add Room modal...');
+('🏠 Opening Add Room modal...');
     try {
         currentRoomId = null;
         document.getElementById('roomModalLabel').textContent = 'Add Room';
@@ -702,16 +707,16 @@ function showAddRoomModal() {
         
         const modalElement = document.getElementById('roomModal');
         if (!modalElement) {
-            console.error('❌ Modal element not found');
+('❌ Modal element not found');
             showAlert('Modal element not found', 'error');
             return;
         }
         
         const modal = new bootstrap.Modal(modalElement);
         modal.show();
-        console.log('✅ Add Room modal opened successfully');
+('✅ Add Room modal opened successfully');
     } catch (error) {
-        console.error('❌ Error opening Add Room modal:', error);
+('❌ Error opening Add Room modal:', error);
         showAlert('Failed to open Add Room modal: ' + error.message, 'error');
     }
 }
@@ -753,7 +758,7 @@ function editRoom(roomId) {
 }
 
 async function saveRoom() {
-    console.log('💾 Saving room...');
+('💾 Saving room...');
     const name = document.getElementById('roomName').value.trim();
     const price = parseInt(document.getElementById('roomPrice').value);
     const stock = parseInt(document.getElementById('roomStock').value);
@@ -763,10 +768,10 @@ async function saveRoom() {
     const imageData = document.getElementById('roomImageData').value;
     const capacity = parseInt(document.getElementById('roomCapacity').value) || 1;
     
-    console.log('📝 Room data:', { name, price, stock, totalStock, status, description, imageData: imageData ? 'Base64 data present' : 'No image', capacity });
+('📝 Room data:', { name, price, stock, totalStock, status, description, imageData: imageData ? 'Base64 data present' : 'No image', capacity });
     
     if (!name || !price || !stock || !imageData) {
-        console.log('❌ Missing required fields');
+('❌ Missing required fields');
         showAlert('Please fill in all required fields and upload an image', 'error');
         return;
     }
@@ -810,7 +815,7 @@ async function saveRoom() {
         }));
         
     } catch (error) {
-        console.error('❌ Error saving room:', error);
+('❌ Error saving room:', error);
         showAlert('Failed to save room: ' + error.message, 'error');
     }
 }
@@ -823,7 +828,7 @@ async function deleteRoom(roomId) {
             await loadRooms();
             loadRoomsTable();
         } catch (error) {
-            console.error('❌ Error deleting room:', error);
+('❌ Error deleting room:', error);
             showAlert('Failed to delete room: ' + error.message, 'error');
         }
     }
@@ -871,7 +876,7 @@ function handleImageUpload(event) {
             // Show preview
             previewImage();
             
-            console.log('✅ Image processed and resized to 800x600');
+('✅ Image processed and resized to 800x600');
         };
         img.src = e.target.result;
     };
@@ -903,7 +908,7 @@ async function cleanupDuplicates() {
             await loadRooms();
             loadRoomsTable();
         } catch (error) {
-            console.error('❌ Error cleaning up duplicates:', error);
+('❌ Error cleaning up duplicates:', error);
             showAlert('Failed to clean up duplicates: ' + error.message, 'error');
         }
     }
@@ -943,7 +948,7 @@ function markAllAsRead() {
                 updateStatsCards();
             });
         }).catch(error => {
-            console.error('❌ Error marking all as read:', error);
+('❌ Error marking all as read:', error);
             showAlert('Failed to mark all as read', 'error');
         });
     }
@@ -975,10 +980,10 @@ async function handleLogout() {
     try {
         await signOut(auth);
         currentUser = null;
-        console.log('✅ Logout successful');
+('✅ Logout successful');
         window.location.href = 'index.html';
     } catch (error) {
-        console.error('❌ Logout error:', error);
+('❌ Logout error:', error);
         showAlert('Logout failed', 'error');
     }
 }
@@ -1001,3 +1006,115 @@ window.editRoom = editRoom;
 window.saveRoom = saveRoom;
 window.deleteRoom = deleteRoom;
 window.previewImage = previewImage;
+window.loadUsers = loadUsers;
+
+// Global variables for users
+let users = [];
+
+// Load users from reservations and contact submissions
+async function loadUsers() {
+('👥 Loading registered users...');
+    try {
+        users = [];
+        
+        // Get unique users from reservations
+        const reservationsQuery = query(collection(db, 'reservations'));
+        const reservationsSnapshot = await getDocs(reservationsQuery);
+        const userEmails = new Set();
+        
+        reservationsSnapshot.docs.forEach(doc => {
+            const data = doc.data();
+            if (data.userEmail) {
+                userEmails.add(data.userEmail);
+            }
+        });
+        
+        // Get unique users from contact submissions
+        const contactsQuery = query(collection(db, 'contactSubmissions'));
+        const contactsSnapshot = await getDocs(contactsQuery);
+        
+        contactsSnapshot.docs.forEach(doc => {
+            const data = doc.data();
+            if (data.email) {
+                userEmails.add(data.email);
+            }
+        });
+        
+        // Create user objects with data from reservations and contacts
+        for (const email of userEmails) {
+            const userReservations = reservationsSnapshot.docs
+                .filter(doc => doc.data().userEmail === email)
+                .map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            const userContacts = contactsSnapshot.docs
+                .filter(doc => doc.data().email === email)
+                .map(doc => ({ id: doc.id, ...doc.data() }));
+            
+            // Get user info from first reservation or contact
+            const firstReservation = userReservations[0];
+            const firstContact = userContacts[0];
+            
+            const user = {
+                email: email,
+                name: firstReservation?.guestName || firstContact?.name || 'Unknown',
+                memberSince: firstReservation?.createdAt || firstContact?.createdAt || new Date().toISOString(),
+                totalBookings: userReservations.length,
+                lastLogin: firstReservation?.createdAt || firstContact?.createdAt || new Date().toISOString(),
+                status: 'Active'
+            };
+            
+            users.push(user);
+        }
+        
+        // Sort by member since (newest first)
+        users.sort((a, b) => new Date(b.memberSince) - new Date(a.memberSince));
+        
+('✅ Loaded', users.length, 'users');
+        loadUsersTable();
+        updateStatsCards();
+        
+    } catch (error) {
+('❌ Error loading users:', error);
+        showAlert('Failed to load users: ' + error.message, 'error');
+    }
+}
+
+// Load users table
+function loadUsersTable() {
+    const tableBody = document.getElementById('usersTable');
+    if (!tableBody) return;
+    
+    if (users.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center text-white py-4">
+                    <i class="bi bi-people text-white" style="font-size: 2rem;"></i>
+                    <p class="text-white mt-2">No registered users found</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tableBody.innerHTML = users.map(user => `
+        <tr>
+            <td>
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; font-size: 0.8rem;">
+                        ${user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <strong>${user.name}</strong>
+                </div>
+            </td>
+            <td>${user.email}</td>
+            <td>${new Date(user.memberSince).toLocaleDateString()}</td>
+            <td>
+                <span class="badge bg-info">${user.totalBookings} booking${user.totalBookings !== 1 ? 's' : ''}</span>
+            </td>
+            <td>${new Date(user.lastLogin).toLocaleDateString()}</td>
+            <td>
+                <span class="badge bg-success">${user.status}</span>
+            </td>
+        </tr>
+    `).join('');
+}
